@@ -98,34 +98,25 @@ public class SoopyV2Forge
         if(!soopyV2Installed){
             soopyIsInstalled();
 
+            public static final String MODULE_FOLDER = "." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
+            + "modules";
             new Thread(() -> {
                 try {
-                    URL downloadURL = new URL("http://soopy.dev/api/soopyv2/downloadlatest.zip");
+                    URL downloadURL = new URL("https://github.com/The-Deerman/SoopyV2Reborn/releases/latest/download/SoopyV2.zip");
+                    downloadURL.openConnection();
 
-                    if (!new File("." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                            + "modules").exists())
-                        new File("." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                                + "modules").mkdirs();
+                    if (!new File(MODULE_FOLDER).exists())
+                        new File(MODULE_FOLDER).mkdirs();
 
-
-                    if (new File("." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                            + "modules" + File.separator + "SoopyV2").exists())
-                        this.deleteDirectory(new File(
-                                "." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                                        + "modules" + File.separator + "SoopyV2"));
+                    if (new File(MODULE_FOLDER + File.separator + "SoopyV2").exists())
+                        this.deleteDirectory(new File(MODULE_FOLDER + File.separator + "SoopyV2"));
 
                     this.urlToFile(downloadURL,
-                            "." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                                    + "modules" + File.separator + "SoopyV2.zip",
-                            10000,
-                            10000);
-                    this.unzip("." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                                    + "modules" + File.separator + "SoopyV2.zip",
-                            "." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                                    + "modules");
+                    MODULE_FOLDER + File.separator + "SoopyV2.zip", 10000, 10000);
+                    this.unzip(MODULE_FOLDER + File.separator + "SoopyV2.zip",
+                    MODULE_FOLDER);
 
-                    new File("." + File.separator + "config" + File.separator + "ChatTriggers" + File.separator
-                            + "modules" + File.separator + "SoopyV2.zip").delete();
+                    new File(MODULE_FOLDER + File.separator + "SoopyV2.zip").delete();
 
                     Thread.sleep(1000);
                     shouldCtReload = true;
@@ -135,15 +126,17 @@ public class SoopyV2Forge
             }).start();
         }
     }
+
     boolean deleteDirectory(File directoryToBeDeleted) {
-    File[] allContents = directoryToBeDeleted.listFiles();
-    if (allContents != null) {
-        for (File file : allContents) {
-            deleteDirectory(file);
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
         }
+        return directoryToBeDeleted.delete();
     }
-    return directoryToBeDeleted.delete();
-}
+
     private void urlToFile(URL url, String destination, int connecttimeout, int readtimeout) {
         File d = new File(destination);
         d.getParentFile().mkdirs();
